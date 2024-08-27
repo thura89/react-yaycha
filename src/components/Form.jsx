@@ -9,7 +9,7 @@ const Form = ({ add }) => {
         e.preventDefault();
         const content = contentRef.current.value;
 
-        add(content, "Halice");
+        add.mutate(content);
         e.currentTarget.reset();
       }}
     >

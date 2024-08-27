@@ -8,6 +8,8 @@ import {
 import { green } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { formatRelative } from "date-fns";
+import LikeButton from "./LikeButton";
+import CommentButton from "./CommentButton";
 
 const Item = ({ item, remove, primary, comment }) => {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ const Item = ({ item, remove, primary, comment }) => {
             <Typography variant="caption" sx={{ color: green[500] }}>
               {formatRelative(item.created, new Date())}
             </Typography>
+            <Typography>{item.id}</Typography>
           </Box>
           <IconButton
             size="small"
@@ -56,12 +59,29 @@ const Item = ({ item, remove, primary, comment }) => {
           sx={{
             display: "flex",
             flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: 1,
           }}
         >
-          <UserIcon fontSize="12" color="info" />
-          <Typography variant="caption">{item.user.name}</Typography>
+          <Box
+            onClick={(e) => {
+              navigate(`/profile/${item.user.id}`);
+              e.stopPropagation();
+            }}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <UserIcon fontSize="12" color="info" />
+            <Typography variant="caption">{item.user.name}</Typography>
+          </Box>
+          <Box>
+            <LikeButton item={item} comment={comment} />
+            <CommentButton item={item} comment={comment} />
+          </Box>
         </Box>
       </CardContent>
     </Card>

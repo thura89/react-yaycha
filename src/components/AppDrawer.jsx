@@ -22,7 +22,6 @@ import React from "react";
 import { useApp } from "../ThemedApp";
 import { useNavigate } from "react-router-dom";
 
-
 const AppDrawer = () => {
   const { showDrawer, setShowDrawer, auth, setAuth } = useApp();
   const navigate = useNavigate();
@@ -56,12 +55,14 @@ const AppDrawer = () => {
                 background: deepPurple[500],
               }}
             />
-            <Typography sx={{ fontWeight: "bold" }}>YZK</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              {auth ? auth.name : "Guest"}
+            </Typography>
           </Box>
         </Box>
         <List>
           <ListItem>
-            <ListItemButton onClick={() => navigate('/')}>
+            <ListItemButton onClick={() => navigate("/")}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -72,7 +73,7 @@ const AppDrawer = () => {
           {auth && (
             <>
               <ListItem>
-                <ListItemButton onClick={() => navigate('/profile/1')}>
+                <ListItemButton onClick={() => navigate(`/profile/${auth.id}`)}>
                   <ListItemIcon>
                     <ProfileIcon />
                   </ListItemIcon>
@@ -80,7 +81,13 @@ const AppDrawer = () => {
                 </ListItemButton>
               </ListItem>
               <ListItem>
-                <ListItemButton onClick={() => setAuth(null)}>
+                <ListItemButton
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setAuth(null);
+                    navigate("/");
+                  }}
+                >
                   <ListItemIcon>
                     <LogoutIcon color="error" />
                   </ListItemIcon>
@@ -92,7 +99,7 @@ const AppDrawer = () => {
           {!auth && (
             <>
               <ListItem>
-                <ListItemButton onClick={() => navigate('/register')}>
+                <ListItemButton onClick={() => navigate("/register")}>
                   <ListItemIcon>
                     <RegisterIcon />
                   </ListItemIcon>
@@ -100,7 +107,11 @@ const AppDrawer = () => {
                 </ListItemButton>
               </ListItem>
               <ListItem>
-                <ListItemButton onClick={() => setAuth(true)}>
+                <ListItemButton
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
                   <ListItemIcon>
                     <LoginIcon />
                   </ListItemIcon>

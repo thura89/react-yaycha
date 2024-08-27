@@ -1,4 +1,11 @@
-import { React, createContext, useContext, useMemo, useState } from "react";
+import {
+  React,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { deepPurple, grey } from "@mui/material/colors";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -10,6 +17,8 @@ import Comments from "./pages/Comments";
 import Profile from "./pages/Profile";
 import Likes from "./pages/Likes";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { fetchVerify } from "./libs/fetcher";
+import Search from "./pages/Search";
 
 const AppContext = createContext();
 
@@ -43,8 +52,12 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/likes/:id",
+        path: "/likes/:id/:type",
         element: <Likes />,
+      },
+      {
+        path: "/search",
+        element: <Search />,
       },
     ],
   },
@@ -57,6 +70,12 @@ const ThemedApp = () => {
   const [showForm, setShowForm] = useState(false);
   const [globalMsg, setGlobalMsg] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
+
+  useEffect(() => {
+    fetchVerify().then((user) => {
+      if (user) setAuth(user);
+    });
+  }, []);
 
   const theme = useMemo(() => {
     return createTheme({
